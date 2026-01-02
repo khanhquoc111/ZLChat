@@ -1,0 +1,11 @@
+# Các thư mục thư viện (rất nặng, không đẩy lên)
+node_modules/
+.expo/
+dist/
+
+# Các file chứa API Key (tuyệt đối không để lộ)
+.env
+.env.local
+
+# Các file hệ thống
+.DS_Store
