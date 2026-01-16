@@ -1,53 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { socket } from '../api/socket';
-import { supabase } from '../api/supabase';
-import { styles } from './ChatScreen.styles';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { socket } from "../api/socket";
+import { supabase } from "../api/supabase";
+import { styles } from "./ChatScreen.styles";
 
-export default function ChatScreen({ user }) {
+export default function ChatScreen({ route, navigation }) {
+  const { user, roomId, partnerName } = route.params;
   const [messages, setMessages] = useState([]);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   useEffect(() => {
     socket.connect();
-    socket.on('receive_message', (newMessage) => {
-      setMessages((prev) => [newMessage, ...prev]);
+    socket.emit("join_room", roomId);
+
+    socket.on("receive_message", (newMessage) => {
+      if (newMessage.room_id === roomId) {
+        setMessages((prevMessages) => [newMessage, ...prevMessages]);
+      }
     });
+
     return () => {
-      socket.off('receive_message');
+      socket.off("receive_message");
       socket.disconnect();
     };
-  }, []);
+  }, [roomId]);
 
   const sendMessage = () => {
     if (text.trim().length === 0) return;
-    socket.emit('send_message', {
-      room_id: "777610be-096d-472e-8367-1725b79313f8",
+    socket.emit("send_message", {
+      room_id: roomId,
       sender_id: user.id,
       text_content: text,
-      message_type: 'text'
+      message_type: "text",
     });
-    setText('');
+    setText("");
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
-        <Text style={styles.userInfo}>Chào, {user.email}</Text>
-        <TouchableOpacity onPress={() => supabase.auth.signOut()}>
-          <Text style={styles.logoutText}>Đăng xuất</Text>
+        {/* Quay lại trang chủ */}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={{ color: "#007AFF" }}>Trở về</Text>
         </TouchableOpacity>
+
+        {/* Hiển thị tên người đang nhắn tin cùng thay vì email của mình */}
+        <Text style={styles.userInfo}>Đang chat với: {partnerName}</Text>
+
+        <View style={{ width: 50 }} />
       </View>
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ flex: 1 }}
+      >
         <FlatList
           data={messages}
           renderItem={({ item }) => {
             const isMine = item.sender_id === user.id;
             return (
-              <View style={[styles.messageBox, isMine ? styles.myMessage : styles.theirMessage]}>
-                <Text style={isMine ? styles.myText : styles.theirText}>{item.text_content}</Text>
+              <View
+                style={[
+                  styles.messageBox,
+                  isMine ? styles.myMessage : styles.theirMessage,
+                ]}
+              >
+                <Text style={isMine ? styles.myText : styles.theirText}>
+                  {item.text_content}
+                </Text>
               </View>
             );
           }}
@@ -56,9 +85,14 @@ export default function ChatScreen({ user }) {
           contentContainerStyle={{ padding: 10 }}
         />
         <View style={styles.inputContainer}>
-          <TextInput style={styles.input} value={text} onChangeText={setText} placeholder="Nhập tin nhắn..." />
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Nhập tin nhắn..."
+          />
           <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Gửi</Text>
+            <Text style={{ color: "#fff", fontWeight: "bold" }}>Gửi</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

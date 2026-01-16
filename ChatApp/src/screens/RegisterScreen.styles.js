@@ -1,33 +1,96 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#F8FAFF', // Màu nền xanh cực nhạt giống trang Login
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 30,
-    textAlign: "center",
-    color: "#333",
+  headerContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+    marginBottom: 20,
+  },
+  logoContainer: {
+    width: 80,
+    height: 80,
+    backgroundColor: '#E8F0FE',
+    borderRadius: 40, // Bo tròn hoàn toàn thành hình tròn
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  headerSubtitle: {
+    fontSize: 15,
+    color: '#7C7C7C',
+    textAlign: 'center',
+    paddingHorizontal: 40,
+  },
+  card: {
+    flex: 1,
+    paddingHorizontal: 30,
+    paddingTop: 30,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#F0F0F0',
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    height: 55,
+    backgroundColor: '#FAFAFA',
   },
   input: {
-    borderHeight: 1,
-    borderColor: "#ddd",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
+    flex: 1,
+    color: '#1A1A1A',
+    fontSize: 15,
+  },
+  registerButton: {
+    backgroundColor: '#3577F1', // Màu xanh Royal Blue đồng bộ
+    flexDirection: 'row',
+    height: 55,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  registerButtonText: {
+    color: '#FFFFFF',
     fontSize: 16,
+    fontWeight: '700',
+    marginRight: 10,
   },
-  button: {
-    backgroundColor: "#34C759",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 30,
   },
-  buttonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-  linkText: { marginTop: 20, color: "#007AFF", textAlign: "center" },
+  footerText: {
+    color: '#7C7C7C',
+    fontSize: 14,
+  },
+  loginText: {
+    color: '#3577F1',
+    fontSize: 14,
+    fontWeight: '700',
+  },
 });
